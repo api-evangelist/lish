@@ -1,25 +1,259 @@
 aid: lish
 name: Lish
-description: Lish is a company surfaced as a portfolio company of 500-global and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Lish is a corporate catering and workplace food service company serving Seattle
+  and the Bellevue/Eastside area of Washington, including Redmond and Kirkland. It
+  connects employers with a curated roster of local partner chefs and runs the
+  whole workplace meal program — menu curation, ordering, delivery and setup —
+  across four service lines: subscription catering, PopUp restaurants that
+  employees buy from directly, on-demand one-off catering, and occasion catering
+  for breakfast, lunch, box lunches, happy hours, meetings and events. The company
+  reports more than 3,000,000 meals served, 100+ curated menus from dozens of
+  partner chefs, an average meal rating of 4.6 stars, and 97.8% of orders
+  delivered on time within a 20-minute window, with dietary accommodation
+  (gluten-free, vegetarian, vegan, dairy-free) as a stated focus. Lish describes
+  an admin dashboard, budget tracking, GPS delivery tracking, Google Calendar and
+  Outlook menu visibility and Slack feedback notifications, but these are end-user
+  product integrations — Lish operates no developer program and publishes no
+  product API. The only public, self-describing HTTP API is the WordPress REST API
+  behind its marketing site, profiled here.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.lishfood.com/wp-content/uploads/2024/05/Lish-Hero-Lish_part_two_finals080jpghalf.jpg
 url: https://raw.githubusercontent.com/api-evangelist/lish/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - 500-global
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: portfolio-lead-enriched
+x-no-product-api: true
+x-no-product-api-note: >-
+  Lish publishes no product API, developer portal, SDK, CLI, MCP server, webhook
+  surface or status page. Probed 2026-07-19: api.lishfood.com,
+  developers.lishfood.com and status.lishfood.com do not resolve, and every
+  /.well-known/ path returns 404. The API profiled below is the WordPress REST
+  API that backs the marketing site — a CMS byproduct with no stability contract.
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- Catering
+- Food and Beverage
+- Food Delivery
+- Workplace
+- Corporate Services
+- Content
+apis:
+- aid: lish:lish-categories-api
+  name: Lish Categories API
+  description: Category terms used to classify posts.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Categories
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-categories-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-comments-api
+  name: Lish Comments API
+  description: Comments left on Lish posts.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-comments-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-media-api
+  name: Lish Media API
+  description: Media library items (images, attachments).
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-media-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-pages-api
+  name: Lish Pages API
+  description: Static marketing pages on the Lish site.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-pages-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-posts-api
+  name: Lish Posts API
+  description: Blog posts published on the Lish site.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Posts
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-posts-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-search-api
+  name: Lish Search API
+  description: Cross-resource search over site content.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-search-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-statuses-api
+  name: Lish Statuses API
+  description: Registered post statuses.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Statuses
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-statuses-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-tags-api
+  name: Lish Tags API
+  description: Tag terms used to classify posts.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-tags-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-taxonomies-api
+  name: Lish Taxonomies API
+  description: Registered taxonomies.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Taxonomies
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-taxonomies-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-types-api
+  name: Lish Types API
+  description: Registered post types.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Types
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-types-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
+- aid: lish:lish-users-api
+  name: Lish Users API
+  description: Post authors exposed by the site.
+  humanURL: https://www.lishfood.com/blog
+  baseURL: https://www.lishfood.com/wp-json/wp/v2
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/lish-users-api-openapi.yml
+  - type: APIReference
+    url: https://www.lishfood.com/wp-json/
+  - type: Documentation
+    url: https://developer.wordpress.org/rest-api/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Authentication
+  url: authentication/lish-authentication.yml
+- type: DomainSecurity
+  url: security/lish-domain-security.yml
+- type: Conventions
+  url: conventions/lish-conventions.yml
+- type: ErrorCatalog
+  url: errors/lish-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/lish-lifecycle.yml
+- type: Conformance
+  url: conformance/lish-conformance.yml
+- type: DataModel
+  url: data-model/lish-data-model.yml
+- type: LLMsTxt
+  url: llms/lish-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Website
-  url: https://lishfood.com
+  url: https://www.lishfood.com
+- type: Blog
+  url: https://www.lishfood.com/blog
+- type: About
+  url: https://www.lishfood.com/pages/about
+- type: HelpCenter
+  url: https://www.lishfood.com/pages/faq
+- type: Support
+  url: https://www.lishfood.com/pages/contact-us
+- type: SignUp
+  url: https://www.lishfood.com/pages/get-started
+- type: Login
+  url: https://www.lishfood.com/account/
+- type: TermsOfService
+  url: https://www.lishfood.com/pages/terms
+- type: PrivacyPolicy
+  url: https://www.lishfood.com/pages/privacy
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
