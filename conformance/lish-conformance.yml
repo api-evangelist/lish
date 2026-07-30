@@ -1,0 +1,116 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  openapi/lish-wordpress-openapi.json, conventions/lish-conventions.yml,
+  errors/lish-problem-types.yml and live responses from
+  https://www.lishfood.com/wp-json/wp/v2/
+scope: >-
+  Assessed against the public WordPress REST API behind lishfood.com. Lish makes
+  no conformance or compliance claims of its own anywhere on its site; nothing
+  below is a vendor assertion, all of it is observed.
+
+standards:
+- id: rest
+  conforms: true
+  evidence: >-
+    Resource-oriented JSON over HTTPS with correct method semantics, HAL-style
+    _links relations on every resource, and a self-describing route index at
+    /wp-json/. Verified live.
+
+- id: pagination
+  conforms: true
+  evidence: >-
+    page/per_page parameters with X-WP-Total and X-WP-TotalPages response
+    headers, exposed to browsers via Access-Control-Expose-Headers. Verified
+    live: X-WP-Total 28, X-WP-TotalPages 14 at per_page=2.
+
+- id: rfc8288
+  conforms: true
+  evidence: >-
+    Web Linking. Link header carries rel="next"/rel="prev". Verified live:
+    'Link: <.../wp/v2/posts?per_page=2&page=2>; rel="next"'.
+
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    Errors use the WordPress envelope {code, message, data.status} with media
+    type application/json, not application/problem+json. No type/title/detail/
+    instance members. Verified live on 400, 401 and 404 responses.
+
+- id: idempotency
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header or any request-deduplication mechanism is defined
+    or accepted. Only method-level idempotency (GET/PUT/DELETE) applies.
+
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No oauth2 security scheme. /.well-known/oauth-authorization-server returns
+    404. The install offers cookie+nonce and Application Password (HTTP Basic)
+    authentication only.
+
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on both hosts.
+
+- id: openapi
+  conforms: false
+  evidence: >-
+    Lish publishes no OpenAPI description. /openapi.json and /swagger.json both
+    return 404. The specification in openapi/ was derived by API Evangelist from
+    the live route index; it is a description of the API, not a provider-published
+    artifact.
+
+- id: json-schema
+  conforms: partial
+  evidence: >-
+    WordPress serves a JSON Schema for each resource via the OPTIONS method on
+    its route, and the route index carries typed arg definitions (type, enum,
+    default, minimum/maximum) which is what the derived OpenAPI was built from.
+    No schema documents are published at stable URLs.
+
+- id: cors
+  conforms: true
+  evidence: >-
+    Access-Control-Allow-Headers advertises Authorization, X-WP-Nonce,
+    Content-Disposition, Content-MD5, Content-Type; Access-Control-Expose-Headers
+    advertises X-WP-Total, X-WP-TotalPages, Link. Verified live.
+
+- id: hsts
+  conforms: true
+  evidence: 'Strict-Transport-Security: max-age=31536000 on both hosts. TLSv1.3.'
+
+- id: json-api
+  conforms: false
+  evidence: >-
+    Does not implement the JSON:API specification — no data/attributes/relationships
+    envelope, no application/vnd.api+json media type.
+
+- id: odata
+  conforms: false
+  evidence: No OData query syntax or $metadata document.
+
+- id: asyncapi
+  conforms: false
+  not_applicable: true
+  evidence: >-
+    No event, streaming or webhook surface exists to describe. This is recorded
+    as not-applicable rather than a failure.
+
+- id: rate-limit-headers
+  conforms: false
+  evidence: >-
+    No RateLimit-* or X-RateLimit-* headers and no published rate-limit policy.
+    Caching (max-age=600) is the only observed throttle.
+
+compliance_programs:
+  published: false
+  certifications: []
+  detail: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, GDPR or FedRAMP claim appears anywhere
+    on lishfood.com, and no trust center exists. Absence of a published program
+    is recorded as data, not inferred as absence of practice. Note that Lish
+    takes payment for catering orders through its ordering application, so a PCI
+    obligation almost certainly exists — it is simply not published.
+  see: security/lish-domain-security.yml

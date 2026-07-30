@@ -1,0 +1,113 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  openapi/lish-wordpress-openapi.json plus error responses observed live against
+  https://www.lishfood.com/wp-json/wp/v2/
+docs: https://developer.wordpress.org/rest-api/using-the-rest-api/
+format: wordpress
+rfc9457: false
+envelope:
+  media_type: application/json
+  shape: '{ "code": string, "message": string, "data": { "status": integer } }'
+  fields:
+    code: Machine-readable, stable WordPress error slug. This is the field to branch on.
+    message: Human-readable English sentence. Not stable; do not match on it.
+    data.status: The HTTP status code, repeated inside the body.
+    data.params: >-
+      Present only on rest_invalid_param. Map of parameter name to a plain-English
+      reason.
+    data.details: >-
+      Present only on rest_invalid_param. Map of parameter name to a nested
+      { code, message, data } object giving the specific validation failure.
+  note: >-
+    This is NOT RFC 9457 problem+json — there is no type/title/detail/instance and
+    the media type is plain application/json. Clients written against a problem+json
+    envelope will need a shim.
+
+problem_types:
+- code: rest_post_invalid_id
+  status: 404
+  title: Invalid post ID
+  message: Invalid post ID.
+  verified: live
+  evidence: GET /wp/v2/posts/999999999 -> 404
+  applies_to: [getPost, getPage, getMediaItem, getComment]
+  remediation: >-
+    The numeric id does not exist, is not of the requested type, or is not
+    publicly visible. Re-resolve the id from the collection endpoint. Note that a
+    draft or private post is reported as missing rather than forbidden, so a 404
+    here does not prove permanent deletion.
+
+- code: rest_forbidden
+  status: 401
+  title: Not allowed
+  message: Sorry, you are not allowed to do that.
+  verified: live
+  evidence: GET /wp/v2/settings -> 401
+  applies_to: [all]
+  remediation: >-
+    The operation requires an authenticated WordPress user with sufficient
+    capability. Anonymous clients should stay on the documented public read
+    surface. Authenticate with a cookie plus X-WP-Nonce (same-origin) or HTTP
+    Basic with an Application Password.
+
+- code: rest_forbidden_context
+  status: 401
+  title: Edit context not permitted
+  message: Sorry, you are not allowed to edit posts in this post type.
+  verified: live
+  evidence: GET /wp/v2/posts?context=edit -> 401
+  applies_to: [listPosts, listPages, listMedia, listUsers, listComments]
+  remediation: >-
+    context=edit exposes unrendered fields and requires an authenticated editor.
+    Use the default context=view, or context=embed for the reduced field set.
+
+- code: rest_invalid_param
+  status: 400
+  title: Invalid parameter
+  message: 'Invalid parameter(s): <name>'
+  verified: live
+  evidence: >-
+    GET /wp/v2/posts?per_page=101 -> 400 with
+    data.params.per_page = "per_page must be between 1 (inclusive) and 100 (inclusive)"
+    and data.details.per_page.code = "rest_out_of_bounds"
+  applies_to: [all]
+  remediation: >-
+    Read data.details.<param>.code for the precise failure (rest_out_of_bounds,
+    rest_invalid_type, rest_not_in_enum, ...) and correct the value. Bounds and
+    enums for every parameter are carried in openapi/lish-wordpress-openapi.json,
+    which was derived from the live route index.
+
+- code: rest_post_invalid_page_number
+  status: 400
+  title: Page number beyond end of collection
+  message: The page number requested is larger than the number of pages available.
+  verified: live
+  evidence: GET /wp/v2/posts?per_page=100&page=99 -> 400
+  applies_to: [listPosts, listPages, listCategories, listTags, listComments, listMedia, listUsers]
+  remediation: >-
+    Paginating past the last page is an ERROR here, not an empty array. Stop
+    when page reaches the X-WP-TotalPages header value, or follow the
+    Link rel="next" header and stop when it is absent. This is the single most
+    common integration bug against this API.
+
+- code: rest_no_route
+  status: 404
+  title: No route matched
+  message: No route was found matching the URL and request method.
+  verified: live
+  evidence: GET /wp/v2/nonexistent-route-xyz -> 404
+  applies_to: [all]
+  remediation: >-
+    The path or method is not registered. Fetch the route index at
+    https://www.lishfood.com/wp-json/ and confirm the route and its allowed
+    methods before retrying.
+
+notes: |
+  Every code in this catalog was observed live against the Lish install on
+  2026-07-19 — none are assumed from upstream WordPress documentation.
+
+  Error codes emitted by the plugin namespaces present in this install
+  (Elementor, Yoast, Wordfence, Contact Form 7, JupiterX, Redirection, WP Smush,
+  Salesforce, WP Engine) are out of scope: those routes are authenticated and
+  were not exercised.

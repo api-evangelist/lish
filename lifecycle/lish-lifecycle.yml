@@ -1,0 +1,81 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  https://www.lishfood.com/wp-json/ route index and live response headers;
+  no versioning, deprecation, SLA or status page is published by Lish
+summary: |
+  Lish publishes no API lifecycle policy of its own, because it runs no developer
+  program. What follows is the lifecycle actually in force for the public
+  WordPress REST API behind lishfood.com, derived from the live install. All of
+  it is inherited from the upstream WordPress project rather than committed to by
+  Lish, which is the key risk for anyone integrating: there is no contract here.
+
+versioning:
+  scheme: path-namespace
+  current_version: wp/v2
+  location: URL path segment, e.g. https://www.lishfood.com/wp-json/wp/v2/posts
+  stability: >-
+    wp/v2 has been the stable WordPress core REST namespace since WordPress 4.7
+    (2016) and is versioned by the upstream project, not by Lish.
+  namespaces_advertised: 21
+  namespace_note: >-
+    The live index advertises 21 namespaces and 348 routes. Only wp/v2 is core;
+    the rest belong to plugins (Elementor, Yoast, Wordfence, Contact Form 7,
+    JupiterX, Redirection, WP Smush, Salesforce, hub-connector, WP Engine) and
+    each versions on its own plugin release cycle. Plugin routes can appear or
+    disappear with any site update, without notice.
+  published_policy: false
+
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  detail: >-
+    No Sunset or Deprecation response headers are emitted, and no deprecation
+    policy exists. Route removal happens silently as a side effect of a
+    WordPress core upgrade or a plugin being deactivated. Integrators should
+    re-read the route index periodically rather than assume route stability.
+  deprecated_operations: []
+  deprecated_operations_note: >-
+    No operation in openapi/lish-wordpress-openapi.json is marked deprecated —
+    the live route index carries no deprecation markers.
+
+support:
+  sla_published: false
+  status_page: null
+  status_page_note: >-
+    status.lishfood.com does not resolve, and no status or uptime page is linked
+    from the site. Operational incidents on the marketing site or the ordering
+    application are not publicly reported.
+  contact: https://www.lishfood.com/pages/contact-us
+  email: catering@lishfood.com
+  support_note: >-
+    Support channels are for catering customers, not API consumers. There is no
+    developer support channel.
+
+changelog:
+  published: false
+  detail: >-
+    Lish publishes no API changelog. The company blog at
+    https://www.lishfood.com/blog covers catering and workplace-food topics, not
+    platform changes.
+
+infrastructure:
+  hosting: 'WP Engine (x-powered-by: WP Engine) behind Amazon CloudFront'
+  tls: TLSv1.3
+  certificate_expires: '2027-03-04'
+  hsts: 'max-age=31536000'
+  detail: >-
+    Certificate expiry and TLS posture are tracked in
+    security/lish-domain-security.yml and are the closest thing to a dated
+    lifecycle signal available for this provider.
+
+risk_assessment:
+  contract: none
+  detail: >-
+    This API exists as a byproduct of the site's CMS, not as a product. There is
+    no published support commitment, no deprecation notice mechanism and no
+    versioning promise from Lish. Treat it as a read-only content feed that may
+    change or be locked down at any time — appropriate for indexing the Lish blog,
+    not for building a dependency on.

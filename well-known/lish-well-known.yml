@@ -1,0 +1,89 @@
+generated: '2026-07-19'
+method: probed
+source: live HTTP probes of lishfood.com and www.lishfood.com
+summary: |
+  No /.well-known/ documents are published on either Lish host. Every standard
+  path probed returned 404. This is a valid, expected result for a corporate
+  catering company that does not run a developer program — it is recorded here
+  so re-runs of the enrichment pipeline do not re-probe blindly, and so a future
+  round can detect the moment Lish starts publishing one.
+found: false
+probes:
+- host: https://www.lishfood.com
+  path: /.well-known/security.txt
+  status: 404
+  file: null
+- host: https://lishfood.com
+  path: /.well-known/security.txt
+  status: 404
+  file: null
+- host: https://www.lishfood.com
+  path: /.well-known/openid-configuration
+  status: 404
+  file: null
+- host: https://lishfood.com
+  path: /.well-known/openid-configuration
+  status: 404
+  file: null
+- host: https://www.lishfood.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+  file: null
+- host: https://lishfood.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+  file: null
+- host: https://www.lishfood.com
+  path: /.well-known/api-catalog
+  status: 404
+  file: null
+- host: https://lishfood.com
+  path: /.well-known/api-catalog
+  status: 404
+  file: null
+- host: https://www.lishfood.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+  file: null
+- host: https://lishfood.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+  file: null
+related_probes:
+- path: /robots.txt
+  status: 200
+  note: >-
+    Present. Disallows /checkout, /cart, /orders, /account, /users and /api.
+    The /api disallow rule refers to an internal application path on the
+    ordering platform; https://app.lishfood.com/api returns 404 and no public
+    API is documented there.
+- path: /llms.txt
+  status: 404
+  note: Not published. A generated llms.txt is provided in llms/ instead.
+- path: /openapi.json
+  status: 404
+  note: Not published.
+- path: /swagger.json
+  status: 404
+  note: Not published.
+- path: /sitemap.xml
+  status: 404
+  note: >-
+    Not at the root; robots.txt points to
+    http://static.lishfood.com/sitemaps/sitemap.xml.gz
+subdomains_checked:
+- host: api.lishfood.com
+  resolves: false
+- host: developers.lishfood.com
+  resolves: false
+- host: status.lishfood.com
+  resolves: false
+- host: docs.lishfood.com
+  resolves: true
+  note: Resolves to ghs.googlehosted.com (Google-hosted) but does not serve over HTTPS.
+- host: app.lishfood.com
+  resolves: true
+  note: Heroku-hosted customer ordering application. Returns 200; no developer surface.
+- host: wordpress.lishfood.com
+  resolves: true
+  note: WordPress origin reported by the REST API index as the site home.

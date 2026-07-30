@@ -1,0 +1,120 @@
+overlay: 1.0.0
+info:
+  title: Lish WordPress REST API — API Evangelist enhancements
+  version: 1.0.0
+  description: >-
+    Enhancements applied by the API Evangelist enrichment pipeline on top of
+    openapi/lish-wordpress-openapi.json. The base specification is itself a
+    faithful derivation of the live route index at
+    https://www.lishfood.com/wp-json/ — this overlay carries only the
+    interpretation layer (business context, verified runtime semantics, and
+    integration warnings) so the derivation stays separable from the commentary.
+    Apply with any OpenAPI Overlay 1.0.0 processor; never edit the base document.
+  x-generated: '2026-07-19'
+  x-method: generated
+  x-source: openapi/lish-wordpress-openapi.json
+extends: ../openapi/lish-wordpress-openapi.json
+actions:
+
+- target: $.info
+  description: Flag the nature of this API so consumers are not misled about its status.
+  update:
+    x-api-evangelist:
+      provider: Lish
+      provider-type: corporate-catering
+      api-status: incidental
+      api-status-note: >-
+        This is the CMS API behind a marketing site, not a product API. Lish
+        operates no developer program, publishes no documentation, and makes no
+        stability commitment. Suitable for indexing Lish content; not suitable as
+        a production dependency.
+      product-api-available: false
+      contract-published: false
+
+- target: $.info
+  description: Record the artifact graph so consumers can find the companion documents.
+  update:
+    x-artifacts:
+      conventions: ../conventions/lish-conventions.yml
+      errors: ../errors/lish-problem-types.yml
+      lifecycle: ../lifecycle/lish-lifecycle.yml
+      authentication: ../authentication/lish-authentication.yml
+      conformance: ../conformance/lish-conformance.yml
+      data-model: ../data-model/lish-data-model.yml
+      domain-security: ../security/lish-domain-security.yml
+      well-known: ../well-known/lish-well-known.yml
+
+- target: $.servers[0]
+  description: Note the origin-host discrepancy that trips up link-following clients.
+  update:
+    x-origin-note: >-
+      Requests are served correctly from https://www.lishfood.com/wp-json, but
+      the WordPress install reports its home as https://wordpress.lishfood.com
+      and emits that origin in Link pagination headers, _links relations and
+      resource `link` fields. Clients that blindly follow returned URLs will
+      hop to the wordpress. host. Rewrite the origin if you need to stay on www.
+
+- target: $.components.schemas.Error
+  description: Attach the verified error catalog to the error schema.
+  update:
+    x-verified-codes:
+    - { code: rest_post_invalid_id, status: 404 }
+    - { code: rest_forbidden, status: 401 }
+    - { code: rest_forbidden_context, status: 401 }
+    - { code: rest_invalid_param, status: 400 }
+    - { code: rest_post_invalid_page_number, status: 400 }
+    - { code: rest_no_route, status: 404 }
+    x-catalog: ../errors/lish-problem-types.yml
+    x-branch-on: >-
+      Branch on `code`, never on `message`. The HTTP status is duplicated in
+      data.status. This envelope is not RFC 9457 problem+json.
+
+- target: $.paths['/wp/v2/posts'].get
+  description: Warn about the pagination end-of-collection error, the most common integration bug.
+  update:
+    x-pagination:
+      total-header: X-WP-Total
+      total-pages-header: X-WP-TotalPages
+      link-header: RFC 8288, rel="next" / rel="prev"
+      per-page-max: 100
+      end-of-collection: >-
+        Requesting a page past the last returns HTTP 400
+        rest_post_invalid_page_number — it does NOT return an empty array.
+        Terminate on the absence of a rel="next" Link header, or stop at
+        X-WP-TotalPages. Verified live 2026-07-19.
+    x-live-observation:
+      observed-total: 28
+      observed-on: '2026-07-19'
+      cache-control: 'max-age=600, must-revalidate'
+
+- target: $.paths['/wp/v2/pages'].get
+  description: Point integrators at where the real Lish business content lives.
+  update:
+    x-content-note: >-
+      The substantive Lish business content is in pages, not posts — /pages/about,
+      /pages/faq, /pages/terms, /pages/privacy, /pages/our-chefs,
+      /pages/lish-technology and the per-service catering pages. Filter by `slug`
+      to fetch a known page directly rather than paging the collection.
+
+- target: $.paths['/wp/v2/search'].get
+  description: Recommend search as the entry point for agents.
+  update:
+    x-agent-note: >-
+      Preferred entry point when no id is known. Returns lightweight
+      {id, title, url, type, subtype} stubs across posts and pages; follow up
+      with getPost or getPage for full content.
+
+- target: $.components.securitySchemes.anonymous
+  description: Make the anonymous-read posture unambiguous.
+  update:
+    x-auth-posture:
+      reads-require-credentials: false
+      verified: >-
+        The live index reports an empty `authentication` object and the
+        documented read surface returns 200 without credentials.
+      privileged-access: >-
+        context=edit and all write methods return 401 with code
+        rest_forbidden_context or rest_forbidden. Authenticated access uses
+        cookie + X-WP-Nonce (same-origin) or HTTP Basic with a WordPress
+        Application Password.
+      rate-limits-published: false

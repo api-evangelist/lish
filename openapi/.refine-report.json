@@ -1,0 +1,34 @@
+{
+  "provider": "lish",
+  "sources": [
+    "lish-categories-api-openapi.yml",
+    "lish-comments-api-openapi.yml",
+    "lish-media-api-openapi.yml",
+    "lish-pages-api-openapi.yml",
+    "lish-posts-api-openapi.yml",
+    "lish-search-api-openapi.yml",
+    "lish-statuses-api-openapi.yml",
+    "lish-tags-api-openapi.yml",
+    "lish-taxonomies-api-openapi.yml",
+    "lish-types-api-openapi.yml",
+    "lish-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "lish-categories-api-openapi.yml",
+    "lish-comments-api-openapi.yml",
+    "lish-media-api-openapi.yml",
+    "lish-pages-api-openapi.yml",
+    "lish-posts-api-openapi.yml",
+    "lish-search-api-openapi.yml",
+    "lish-statuses-api-openapi.yml",
+    "lish-tags-api-openapi.yml",
+    "lish-taxonomies-api-openapi.yml",
+    "lish-types-api-openapi.yml",
+    "lish-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

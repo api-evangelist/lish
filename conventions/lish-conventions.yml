@@ -1,0 +1,144 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  openapi/lish-wordpress-openapi.json plus verified live responses from
+  https://www.lishfood.com/wp-json/wp/v2/
+docs: https://developer.wordpress.org/rest-api/using-the-rest-api/
+summary: |
+  Cross-cutting runtime semantics for the one public HTTP API Lish exposes: the
+  WordPress REST API behind lishfood.com. These are WordPress core conventions,
+  each one confirmed against live responses from the Lish install rather than
+  assumed from the upstream project.
+
+authentication:
+  style: none-for-reads
+  detail: >-
+    The live index at https://www.lishfood.com/wp-json/ reports an empty
+    `authentication` object, and the documented read surface returns 200 with no
+    credentials. Write operations and privileged reads return 401 with the
+    WordPress error envelope. WordPress supports cookie + X-WP-Nonce for
+    same-origin requests and HTTP Basic with an Application Password for
+    machine clients; the application-password routes are present in this
+    install's index.
+  accepted_auth_headers: >-
+    Access-Control-Allow-Headers on live responses advertises: Authorization,
+    X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type
+  see: authentication/lish-authentication.yml
+
+idempotency:
+  supported: false
+  detail: >-
+    The WordPress REST API defines no idempotency-key mechanism. There is no
+    Idempotency-Key header, no request-replay window and no deduplication
+    guarantee. Safety is method-based only: GET/HEAD/OPTIONS are safe, PUT and
+    DELETE are naturally idempotent, POST is not. Retrying a failed POST may
+    create a duplicate resource.
+  header: null
+  retention: null
+
+pagination:
+  style: page-number
+  params:
+    page:
+      description: 1-based page number.
+      default: 1
+    per_page:
+      description: Items per page.
+      default: 10
+      maximum: 100
+    offset:
+      description: Alternative absolute offset, mutually exclusive with page.
+  response_headers:
+    X-WP-Total: 'Total item count. Verified live (X-WP-Total: 28 on /wp/v2/posts).'
+    X-WP-TotalPages: 'Total page count. Verified live (X-WP-TotalPages: 14 at per_page=2).'
+    Link: >-
+      RFC 8288 link header carrying rel="next" and rel="prev". Verified live, the
+      header value was
+      '<https://wordpress.lishfood.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"'
+  cors_exposed: >-
+    Access-Control-Expose-Headers advertises X-WP-Total, X-WP-TotalPages and
+    Link, so browser clients can read the pagination headers.
+  note: >-
+    Requesting a page beyond the last returns 400 rest_post_invalid_page_number
+    rather than an empty array.
+
+field_selection:
+  sparse_fields:
+    param: _fields
+    detail: Comma-separated list of top-level fields to return, e.g. ?_fields=id,title,link
+  expansion:
+    param: _embed
+    detail: >-
+      Inlines linked resources (author, featured media, terms) into an _embedded
+      object on each item, following the _links relations.
+  hal_links:
+    detail: >-
+      Every resource carries a `_links` object of HAL-style relations (self,
+      collection, author, replies, wp:term, wp:featuredmedia, curies).
+  context:
+    param: context
+    values: [view, embed, edit]
+    default: view
+    detail: >-
+      Controls the field set returned. `edit` requires authentication and
+      returns 401 anonymously.
+
+filtering_and_sorting:
+  search: { param: search, detail: Free-text search across the collection. }
+  ordering:
+    params: [orderby, order]
+    detail: orderby varies per resource type; order is asc or desc.
+  date_windows:
+    params: [after, before, modified_after, modified_before]
+    detail: ISO 8601 date-time bounds.
+  inclusion: { params: [include, exclude, slug, status], detail: Filter by id, slug or status. }
+
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation header is emitted. Responses do carry CDN trace
+    headers from the fronting Amazon CloudFront distribution (x-amz-cf-id,
+    x-amz-cf-pop, x-cache) and a WP Engine x-cache-group header, which are
+    infrastructure-level and not a stable API tracing contract.
+
+versioning:
+  scheme: path-namespace
+  current: wp/v2
+  detail: >-
+    Version lives in the URL path as a namespace segment, e.g.
+    /wp-json/wp/v2/posts. The live index advertises 21 namespaces; plugin
+    namespaces version independently of wp/v2.
+  see: lifecycle/lish-lifecycle.yml
+
+errors:
+  envelope: wordpress
+  format: application/json
+  problem_json: false
+  shape: '{ "code": string, "message": string, "data": { "status": integer } }'
+  detail: >-
+    Not RFC 9457 problem+json. The HTTP status is repeated inside data.status.
+    Parameter validation errors add data.params and data.details.
+  see: errors/lish-problem-types.yml
+
+rate_limiting:
+  documented: false
+  headers: []
+  detail: >-
+    No rate-limit headers are returned and no rate-limit policy is published.
+    Caching is the practical throttle: live responses carry
+    Cache-Control: max-age=600, must-revalidate behind WP Engine and CloudFront,
+    so repeated reads are largely served from cache.
+
+caching:
+  cache_control: 'max-age=600, must-revalidate (verified live on /wp/v2/posts)'
+  conditional_requests: >-
+    WordPress does not emit ETag or Last-Modified on REST collection responses;
+    conditional GET is not available.
+  cdn: Amazon CloudFront in front of WP Engine nginx.
+
+security_headers:
+  strict_transport_security: 'max-age=31536000'
+  x_content_type_options: nosniff
+  x_frame_options: SAMEORIGIN
+  content_security_policy: "frame-ancestors 'self' https://lishfood.com https://*.lishfood.com;"
+  see: security/lish-domain-security.yml

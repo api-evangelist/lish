@@ -1,0 +1,178 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  openapi/lish-wordpress-openapi.json (itself derived from the live route index)
+  plus _links / _embedded relations observed on live responses from
+  https://www.lishfood.com/wp-json/wp/v2/
+summary: |
+  Entity graph for the public WordPress REST API behind lishfood.com. Identifiers
+  are plain auto-increment integers — there are no prefixed or typed ids in this
+  API. Relationships were read off the HAL `_links` object present on live
+  resources; an `_embed` request against /wp/v2/posts returned _embedded keys
+  author, wp:featuredmedia and wp:term, confirming the three primary edges.
+
+id_scheme:
+  type: integer
+  prefixed: false
+  detail: >-
+    Every resource is keyed by a positive integer, unique only within its post
+    type or taxonomy. Ids are not globally unique across entities — post 10251 and
+    media 10251 are unrelated. Slugs are the stable human-facing key.
+
+entities:
+- name: Post
+  route: /wp/v2/posts
+  operations: [listPosts, getPost]
+  description: A blog post on the Lish site. 28 exist as of this pass.
+  key_fields: [id, slug, date, modified, title, content, excerpt, link, status, author, featured_media]
+  relationships:
+  - to: User
+    type: belongs_to
+    via: author
+    rel: author
+  - to: Media
+    type: has_one
+    via: featured_media
+    rel: wp:featuredmedia
+  - to: Category
+    type: has_many
+    via: categories
+    rel: wp:term
+  - to: Tag
+    type: has_many
+    via: tags
+    rel: wp:term
+  - to: Comment
+    type: has_many
+    via: post
+    rel: replies
+
+- name: Page
+  route: /wp/v2/pages
+  operations: [listPages, getPage]
+  description: >-
+    A static marketing page — this is where the actual Lish business content
+    lives (/pages/about, /pages/faq, /pages/terms, /pages/privacy,
+    /pages/our-chefs, /pages/lish-technology, the per-service catering pages).
+  key_fields: [id, slug, title, content, link, parent, menu_order, status]
+  relationships:
+  - to: User
+    type: belongs_to
+    via: author
+    rel: author
+  - to: Page
+    type: belongs_to
+    via: parent
+    rel: up
+    note: Pages form a self-referencing hierarchy via the parent field.
+  - to: Media
+    type: has_one
+    via: featured_media
+    rel: wp:featuredmedia
+
+- name: Category
+  route: /wp/v2/categories
+  operations: [listCategories, getCategory]
+  description: Hierarchical taxonomy term classifying posts.
+  key_fields: [id, slug, name, description, count, parent]
+  relationships:
+  - to: Post
+    type: has_many
+    via: categories
+    rel: wp:post_type
+  - to: Category
+    type: belongs_to
+    via: parent
+    note: Categories are hierarchical and self-referencing.
+
+- name: Tag
+  route: /wp/v2/tags
+  operations: [listTags, getTag]
+  description: Flat taxonomy term classifying posts.
+  key_fields: [id, slug, name, description, count]
+  relationships:
+  - to: Post
+    type: has_many
+    via: tags
+    rel: wp:post_type
+
+- name: Comment
+  route: /wp/v2/comments
+  operations: [listComments, getComment]
+  description: A comment left against a post.
+  key_fields: [id, post, parent, author_name, date, content, status]
+  relationships:
+  - to: Post
+    type: belongs_to
+    via: post
+    rel: up
+  - to: Comment
+    type: belongs_to
+    via: parent
+    note: Threaded replies are self-referencing.
+  - to: User
+    type: belongs_to
+    via: author
+    note: Only set for comments left by registered users; 0 for anonymous commenters.
+
+- name: Media
+  route: /wp/v2/media
+  operations: [listMedia, getMediaItem]
+  description: >-
+    Media library attachment — the food photography and chef imagery used across
+    the Lish site.
+  key_fields: [id, slug, date, media_type, mime_type, source_url, alt_text, media_details, post]
+  relationships:
+  - to: Post
+    type: belongs_to
+    via: post
+    note: The post or page the attachment was uploaded to, when set.
+  - to: User
+    type: belongs_to
+    via: author
+
+- name: User
+  route: /wp/v2/users
+  operations: [listUsers, getUser]
+  description: >-
+    A content author. Only users who have authored published content are exposed
+    anonymously; the full user list requires authentication.
+  key_fields: [id, name, slug, description, link, avatar_urls]
+  relationships:
+  - to: Post
+    type: has_many
+    via: author
+  - to: Media
+    type: has_many
+    via: author
+
+registries:
+- name: Type
+  route: /wp/v2/types
+  operations: [listTypes]
+  description: >-
+    Registry of registered post types. Not a content entity — it describes which
+    content entities exist on this install, including plugin-registered types
+    such as portfolio, elementor_library and jupiterx-popups.
+- name: Taxonomy
+  route: /wp/v2/taxonomies
+  operations: [listTaxonomies]
+  description: Registry of registered taxonomies (category, post_tag, portfolio_category, portfolio_tag).
+- name: Status
+  route: /wp/v2/statuses
+  operations: [listStatuses]
+  description: Registry of registered post statuses (publish, future, draft, pending, private).
+
+search:
+  route: /wp/v2/search
+  operation: searchContent
+  description: >-
+    Cross-entity search returning lightweight {id, title, url, type, subtype}
+    stubs that point back into the entities above. The practical entry point when
+    the caller does not already know an id.
+
+render:
+  subway: null
+  note: >-
+    No subway/ diagram exists for this repo. The graph is small enough (7 entities,
+    3 registries) that the relationships[] above are the primary representation.

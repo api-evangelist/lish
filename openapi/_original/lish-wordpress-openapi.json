@@ -1,0 +1,2909 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Lish WordPress REST API",
+    "version": "wp/v2",
+    "summary": "Public read surface of the WordPress REST API behind lishfood.com.",
+    "description": "Lish (lishfood.com) is a corporate catering and workplace food service company serving Seattle and the Bellevue/Eastside area. Lish does not publish a product API for its catering platform. This document describes the one genuinely public, self-describing HTTP API the company does expose: the WordPress REST API that backs its marketing site and blog, reachable at https://www.lishfood.com/wp-json/ (the WordPress install reports its home as https://wordpress.lishfood.com).\n\nThis specification was DERIVED by the API Evangelist enrichment pipeline from the live route index \u2014 every path, method, parameter name, type, default and enum is taken from `routes[].endpoints[].args` as served on 2026-07-19. It is scoped to the publicly readable `wp/v2` core content surface (posts, pages, categories, tags, comments, media, users, search, types, taxonomies, statuses). The live index also advertises 348 routes across 21 namespaces, most of which belong to plugins (Elementor, Yoast, Wordfence, Contact Form 7, JupiterX, Redirection, WP Smush, Salesforce, WP Engine) and require authentication.\n\nWrite methods (POST/PUT/PATCH/DELETE) are advertised by the index but require authentication and are intentionally not documented here.",
+    "contact": {
+      "name": "Lish",
+      "email": "catering@lishfood.com",
+      "url": "https://www.lishfood.com/pages/contact-us"
+    },
+    "license": {
+      "name": "GPL-2.0-or-later",
+      "url": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+    },
+    "x-derived-by": "api-evangelist enrichment pipeline",
+    "x-derived-from": "https://www.lishfood.com/wp-json/",
+    "x-derived-on": "2026-07-19",
+    "x-upstream-project": "https://developer.wordpress.org/rest-api/"
+  },
+  "servers": [
+    {
+      "url": "https://www.lishfood.com/wp-json",
+      "description": "Production WordPress REST API"
+    }
+  ],
+  "externalDocs": {
+    "description": "WordPress REST API Handbook",
+    "url": "https://developer.wordpress.org/rest-api/"
+  },
+  "tags": [
+    {
+      "name": "Posts",
+      "description": "Blog posts published on the Lish site."
+    },
+    {
+      "name": "Pages",
+      "description": "Static marketing pages on the Lish site."
+    },
+    {
+      "name": "Categories",
+      "description": "Category terms used to classify posts."
+    },
+    {
+      "name": "Tags",
+      "description": "Tag terms used to classify posts."
+    },
+    {
+      "name": "Comments",
+      "description": "Comments left on Lish posts."
+    },
+    {
+      "name": "Media",
+      "description": "Media library items (images, attachments)."
+    },
+    {
+      "name": "Users",
+      "description": "Post authors exposed by the site."
+    },
+    {
+      "name": "Search",
+      "description": "Cross-resource search over site content."
+    },
+    {
+      "name": "Types",
+      "description": "Registered post types."
+    },
+    {
+      "name": "Taxonomies",
+      "description": "Registered taxonomies."
+    },
+    {
+      "name": "Statuses",
+      "description": "Registered post statuses."
+    }
+  ],
+  "paths": {
+    "/wp/v2/posts": {
+      "get": {
+        "operationId": "listPosts",
+        "summary": "List posts",
+        "description": "Retrieve a paginated collection of posts. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts published after a given ISO8601 compliant date."
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to posts assigned to specific authors."
+          },
+          {
+            "name": "author_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes posts assigned to specific authors."
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts published before a given ISO8601 compliant date."
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object"
+            },
+            "description": "Limit result set to items with specific terms assigned in the categories taxonomy."
+          },
+          {
+            "name": "categories_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object"
+            },
+            "description": "Limit result set to items except those with specific terms assigned in the categories taxonomy."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "aside",
+                  "chat",
+                  "gallery",
+                  "link",
+                  "image",
+                  "quote",
+                  "status",
+                  "video",
+                  "audio"
+                ]
+              }
+            },
+            "description": "Limit result set to items assigned one or more given formats."
+          },
+          {
+            "name": "ignore_sticky",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "Whether to ignore sticky posts or not."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "modified_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts modified after a given ISO8601 compliant date."
+          },
+          {
+            "name": "modified_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts modified before a given ISO8601 compliant date."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offset the result set by a specific number of items."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "author",
+                "date",
+                "id",
+                "include",
+                "modified",
+                "parent",
+                "relevance",
+                "slug",
+                "include_slugs",
+                "title"
+              ],
+              "default": "date"
+            },
+            "description": "Sort collection by post attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "search_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "post_title",
+                  "post_content",
+                  "post_excerpt"
+                ]
+              },
+              "default": []
+            },
+            "description": "Array of column names to be searched."
+          },
+          {
+            "name": "search_semantics",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "exact"
+              ]
+            },
+            "description": "How to interpret the search input."
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to posts with one or more specific slugs."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "publish",
+                  "future",
+                  "draft",
+                  "pending",
+                  "private",
+                  "trash",
+                  "auto-draft",
+                  "inherit",
+                  "request-pending",
+                  "request-confirmed",
+                  "request-failed",
+                  "request-completed",
+                  "acf-disabled",
+                  "flamingo-spam",
+                  "any"
+                ]
+              },
+              "default": "publish"
+            },
+            "description": "Limit result set to posts assigned one or more statuses."
+          },
+          {
+            "name": "sticky",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Limit result set to items that are sticky."
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object"
+            },
+            "description": "Limit result set to items with specific terms assigned in the tags taxonomy."
+          },
+          {
+            "name": "tags_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object"
+            },
+            "description": "Limit result set to items except those with specific terms assigned in the tags taxonomy."
+          },
+          {
+            "name": "tax_relation",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AND",
+                "OR"
+              ]
+            },
+            "description": "Limit result set based on relationship between multiple taxonomies."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of posts.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/posts/{id}": {
+      "get": {
+        "operationId": "getPost",
+        "summary": "Retrieve a single post",
+        "description": "Retrieve one post by its numeric id.",
+        "tags": [
+          "Posts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the post."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "excerpt_length",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Override the default excerpt length."
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The password for the post if it is password protected."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested post.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/pages": {
+      "get": {
+        "operationId": "listPages",
+        "summary": "List pages",
+        "description": "Retrieve a paginated collection of pages. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Pages"
+        ],
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts published after a given ISO8601 compliant date."
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to posts assigned to specific authors."
+          },
+          {
+            "name": "author_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes posts assigned to specific authors."
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts published before a given ISO8601 compliant date."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "menu_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limit result set to posts with a specific menu_order value."
+          },
+          {
+            "name": "modified_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts modified after a given ISO8601 compliant date."
+          },
+          {
+            "name": "modified_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts modified before a given ISO8601 compliant date."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offset the result set by a specific number of items."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "author",
+                "date",
+                "id",
+                "include",
+                "modified",
+                "parent",
+                "relevance",
+                "slug",
+                "include_slugs",
+                "title",
+                "menu_order"
+              ],
+              "default": "date"
+            },
+            "description": "Sort collection by post attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to items with particular parent IDs."
+          },
+          {
+            "name": "parent_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to all items except those of a particular parent ID."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "search_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "post_title",
+                  "post_content",
+                  "post_excerpt"
+                ]
+              },
+              "default": []
+            },
+            "description": "Array of column names to be searched."
+          },
+          {
+            "name": "search_semantics",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "exact"
+              ]
+            },
+            "description": "How to interpret the search input."
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to posts with one or more specific slugs."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "publish",
+                  "future",
+                  "draft",
+                  "pending",
+                  "private",
+                  "trash",
+                  "auto-draft",
+                  "inherit",
+                  "request-pending",
+                  "request-confirmed",
+                  "request-failed",
+                  "request-completed",
+                  "acf-disabled",
+                  "flamingo-spam",
+                  "any"
+                ]
+              },
+              "default": "publish"
+            },
+            "description": "Limit result set to posts assigned one or more statuses."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of pages.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/pages/{id}": {
+      "get": {
+        "operationId": "getPage",
+        "summary": "Retrieve a single page",
+        "description": "Retrieve one page by its numeric id.",
+        "tags": [
+          "Pages"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the page."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "excerpt_length",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Override the default excerpt length."
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The password for the post if it is password protected."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/categories": {
+      "get": {
+        "operationId": "listCategories",
+        "summary": "List categories",
+        "description": "Retrieve a paginated collection of categories. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Categories"
+        ],
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "hide_empty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Whether to hide terms not assigned to any posts."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "include",
+                "name",
+                "slug",
+                "include_slugs",
+                "term_group",
+                "description",
+                "count"
+              ],
+              "default": "name"
+            },
+            "description": "Sort collection by term attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limit result set to terms assigned to a specific parent."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "post",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limit result set to terms assigned to a specific post."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to terms with one or more specific slugs."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of categories.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/categories/{id}": {
+      "get": {
+        "operationId": "getCategory",
+        "summary": "Retrieve a single category",
+        "description": "Retrieve one category by its numeric id.",
+        "tags": [
+          "Categories"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the category."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested category.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/tags": {
+      "get": {
+        "operationId": "listTags",
+        "summary": "List tags",
+        "description": "Retrieve a paginated collection of tags. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "hide_empty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Whether to hide terms not assigned to any posts."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offset the result set by a specific number of items."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "include",
+                "name",
+                "slug",
+                "include_slugs",
+                "term_group",
+                "description",
+                "count"
+              ],
+              "default": "name"
+            },
+            "description": "Sort collection by term attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "post",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Limit result set to terms assigned to a specific post."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to terms with one or more specific slugs."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of tags.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/tags/{id}": {
+      "get": {
+        "operationId": "getTag",
+        "summary": "Retrieve a single tag",
+        "description": "Retrieve one tag by its numeric id.",
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the tag."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested tag.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/comments": {
+      "get": {
+        "operationId": "listComments",
+        "summary": "List comments",
+        "description": "Retrieve a paginated collection of comments. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to comments published after a given ISO8601 compliant date."
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "description": "Limit result set to comments assigned to specific user IDs. Requires authorization."
+          },
+          {
+            "name": "author_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "email"
+            },
+            "description": "Limit result set to that from a specific author email. Requires authorization."
+          },
+          {
+            "name": "author_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "description": "Ensure result set excludes comments assigned to specific user IDs. Requires authorization."
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to comments published before a given ISO8601 compliant date."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offset the result set by a specific number of items."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date",
+                "date_gmt",
+                "id",
+                "include",
+                "post",
+                "parent",
+                "type"
+              ],
+              "default": "date_gmt"
+            },
+            "description": "Sort collection by comment attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to comments of specific parent IDs."
+          },
+          {
+            "name": "parent_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific parent IDs."
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The password for the post if it is password protected."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "post",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to comments assigned to specific post IDs."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "approve"
+            },
+            "description": "Limit result set to comments assigned a specific status. Requires authorization."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "comment"
+            },
+            "description": "Limit result set to comments assigned a specific type. Requires authorization."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of comments.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/comments/{id}": {
+      "get": {
+        "operationId": "getComment",
+        "summary": "Retrieve a single comment",
+        "description": "Retrieve one comment by its numeric id.",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the comment."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The password for the parent post of the comment (if the post is password protected)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested comment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/media": {
+      "get": {
+        "operationId": "listMedia",
+        "summary": "List media",
+        "description": "Retrieve a paginated collection of media. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Media"
+        ],
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts published after a given ISO8601 compliant date."
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to posts assigned to specific authors."
+          },
+          {
+            "name": "author_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes posts assigned to specific authors."
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts published before a given ISO8601 compliant date."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "media_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "image",
+                  "video",
+                  "text",
+                  "application",
+                  "audio"
+                ]
+              }
+            },
+            "description": "Limit result set to attachments of a particular media type or media types."
+          },
+          {
+            "name": "mime_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to attachments of a particular MIME type or MIME types."
+          },
+          {
+            "name": "modified_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts modified after a given ISO8601 compliant date."
+          },
+          {
+            "name": "modified_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Limit response to posts modified before a given ISO8601 compliant date."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offset the result set by a specific number of items."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "author",
+                "date",
+                "id",
+                "include",
+                "modified",
+                "parent",
+                "relevance",
+                "slug",
+                "include_slugs",
+                "title"
+              ],
+              "default": "date"
+            },
+            "description": "Sort collection by post attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to items with particular parent IDs."
+          },
+          {
+            "name": "parent_exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to all items except those of a particular parent ID."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "search_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "post_title",
+                  "post_content",
+                  "post_excerpt"
+                ]
+              },
+              "default": []
+            },
+            "description": "Array of column names to be searched."
+          },
+          {
+            "name": "search_semantics",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "exact"
+              ]
+            },
+            "description": "How to interpret the search input."
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to posts with one or more specific slugs."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "inherit",
+                  "private",
+                  "trash"
+                ]
+              },
+              "default": "inherit"
+            },
+            "description": "Limit result set to posts assigned one or more statuses."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of media.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/media/{id}": {
+      "get": {
+        "operationId": "getMediaItem",
+        "summary": "Retrieve a single media item",
+        "description": "Retrieve one media item by its numeric id.",
+        "tags": [
+          "Media"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the media item."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested media item.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/users": {
+      "get": {
+        "operationId": "listUsers",
+        "summary": "List users",
+        "description": "Retrieve a paginated collection of users. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "capabilities",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to users matching at least one specific capability provided. Accepts csv list or single capability."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "has_published_posts",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Limit result set to users who have published posts."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Offset the result set by a specific number of items."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Order sort attribute ascending or descending."
+          },
+          {
+            "name": "orderby",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "include",
+                "name",
+                "registered_date",
+                "slug",
+                "include_slugs",
+                "email",
+                "url"
+              ],
+              "default": "name"
+            },
+            "description": "Sort collection by user attribute."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "roles",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to users matching at least one specific role provided. Accepts csv list or single role."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "search_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "email",
+                  "name",
+                  "id",
+                  "username",
+                  "slug"
+                ]
+              },
+              "default": []
+            },
+            "description": "Array of column names to be searched."
+          },
+          {
+            "name": "slug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Limit result set to users with one or more specific slugs."
+          },
+          {
+            "name": "who",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "authors"
+              ]
+            },
+            "description": "Limit result set to users who are considered authors."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of users.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/wp/v2/users/{id}": {
+      "get": {
+        "operationId": "getUser",
+        "summary": "Retrieve a single user",
+        "description": "Retrieve one user by its numeric id.",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Unique numeric identifier for the user."
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/wp/v2/search": {
+      "get": {
+        "operationId": "searchContent",
+        "summary": "Search site content",
+        "description": "Cross-resource search over site content. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Search"
+        ],
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "exclude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Ensure result set excludes specific IDs."
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "description": "Limit result set to specific IDs."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Current page of the collection."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of items to be returned in result set."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to those matching a string."
+          },
+          {
+            "name": "subtype",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "post",
+                  "page",
+                  "e-floating-buttons",
+                  "elementor_library",
+                  "portfolio",
+                  "jupiterx-codes",
+                  "jupiterx-fonts",
+                  "jupiterx-icons",
+                  "jupiterx-popups",
+                  "category",
+                  "post_tag",
+                  "portfolio_category",
+                  "portfolio_tag",
+                  "any"
+                ]
+              },
+              "default": "any"
+            },
+            "description": "Limit results to items of one or more object subtypes."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "post",
+                "term",
+                "post-format"
+              ],
+              "default": "post"
+            },
+            "description": "Limit results to items of an object type."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results.",
+            "headers": {
+              "X-WP-Total": {
+                "$ref": "#/components/headers/X-WP-Total"
+              },
+              "X-WP-TotalPages": {
+                "$ref": "#/components/headers/X-WP-TotalPages"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/wp/v2/types": {
+      "get": {
+        "operationId": "listTypes",
+        "summary": "List types",
+        "description": "Registered post types. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Types"
+        ],
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Types as served by the site.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/wp/v2/taxonomies": {
+      "get": {
+        "operationId": "listTaxonomies",
+        "summary": "List taxonomies",
+        "description": "Registered taxonomies. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Taxonomies"
+        ],
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Limit results to taxonomies associated with a specific post type."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Taxonomies as served by the site.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/wp/v2/statuses": {
+      "get": {
+        "operationId": "listStatuses",
+        "summary": "List statuses",
+        "description": "Registered post statuses. Parameters are taken verbatim from the live route index.",
+        "tags": [
+          "Statuses"
+        ],
+        "parameters": [
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "view",
+                "embed",
+                "edit"
+              ],
+              "default": "view"
+            },
+            "description": "Scope under which the request is made; determines fields present in response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statuses as served by the site.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "anonymous": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-WP-Nonce",
+        "description": "The public read surface documented here requires NO credentials \u2014 the live index reports an empty `authentication` object. Authenticated operations use a cookie plus an `X-WP-Nonce` header (same-origin), or HTTP Basic with a WordPress Application Password (`/wp/v2/users/<id>/application-passwords` is present in the live index)."
+      }
+    },
+    "parameters": {},
+    "headers": {
+      "X-WP-Total": {
+        "description": "Total number of items in the collection. Verified live.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "X-WP-TotalPages": {
+        "description": "Total number of pages available. Verified live.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "Link": {
+        "description": "RFC 8288 pagination links (rel=\"next\" / rel=\"prev\"). Verified live.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "description": "WordPress REST error envelope. Verified live: GET /wp/v2/posts/999999999 -> 404 {\"code\":\"rest_post_invalid_id\",\"message\":\"Invalid post ID.\",\"data\":{\"status\":404}} ; GET /wp/v2/settings -> 401 {\"code\":\"rest_forbidden\",\"message\":\"Sorry, you are not allowed to do that.\",\"data\":{\"status\":401}}",
+        "required": [
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Machine-readable WordPress error code, e.g. rest_post_invalid_id."
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code, repeated in the body."
+              },
+              "params": {
+                "type": "object",
+                "description": "Present on rest_invalid_param: offending parameters."
+              },
+              "details": {
+                "type": "object",
+                "description": "Present on rest_invalid_param: per-parameter detail."
+              }
+            }
+          }
+        }
+      },
+      "Object": {
+        "type": "object",
+        "description": "A WordPress REST resource. Field-level schemas are served per-resource by the OPTIONS method on each route and are not reproduced here \u2014 this document does not invent field definitions the index does not publish.",
+        "additionalProperties": true
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid parameter (WordPress error envelope).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication required (WordPress error envelope). Verified live on /wp/v2/settings.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Authenticated but not permitted (WordPress error envelope).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found (WordPress error envelope). Verified live on /wp/v2/posts/999999999.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": []
+}
