@@ -216,6 +216,10 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: MCPServer
+  url: mcp/lish-mcp.yml
+- type: Overlay
+  url: overlays/lish-wordpress-overlay.yaml
 - type: Authentication
   url: authentication/lish-authentication.yml
 - type: DomainSecurity
