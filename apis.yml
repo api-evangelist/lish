@@ -44,7 +44,7 @@ x-no-product-api-note: >-
   developers.lishfood.com and status.lishfood.com do not resolve, and every
   /.well-known/ path returns 404. The API profiled below is the WordPress REST
   API that backs the marketing site — a CMS byproduct with no stability contract.
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-07-19'
 tags:
