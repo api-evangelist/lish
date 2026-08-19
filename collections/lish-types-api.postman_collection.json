@@ -1,0 +1,160 @@
+{
+  "item": [
+    {
+      "id": "a1ae2991-f151-410b-8c39-99d3879f5047",
+      "name": "Types",
+      "description": {
+        "content": "Registered post types.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b5b563a2-b814-4358-994f-09b3f905661f",
+          "name": "List types",
+          "request": {
+            "name": "List types",
+            "description": {
+              "content": "Registered post types. Parameters are taken verbatim from the live route index.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines fields present in response."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ab7e15ae-ec1e-4a8f-a399-4af8311c540d",
+              "name": "Types as served by the site.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 7702.589588590827,\n  \"key_1\": 8932.990882961005\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b4b3d23-1823-458e-aa45-71797a391983",
+              "name": "Invalid parameter (WordPress error envelope).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"data\": {\n    \"status\": 7130,\n    \"params\": {},\n    \"details\": {}\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.lishfood.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "bb8cf188-cb9a-4050-8823-3348cb6169c2",
+    "name": "Lish WordPress REST Categories Types API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Lish (lishfood.com) is a corporate catering and workplace food service company serving Seattle and the Bellevue/Eastside area. Lish does not publish a product API for its catering platform. This document describes the one genuinely public, self-describing HTTP API the company does expose: the WordPress REST API that backs its marketing site and blog, reachable at https://www.lishfood.com/wp-json/ (the WordPress install reports its home as https://wordpress.lishfood.com).\n\nThis specification was DERIVED by the API Evangelist enrichment pipeline from the live route index — every path, method, parameter name, type, default and enum is taken from `routes[].endpoints[].args` as served on 2026-07-19. It is scoped to the publicly readable `wp/v2` core content surface (posts, pages, categories, tags, comments, media, users, search, types, taxonomies, statuses). The live index also advertises 348 routes across 21 namespaces, most of which belong to plugins (Elementor, Yoast, Wordfence, Contact Form 7, JupiterX, Redirection, WP Smush, Salesforce, WP Engine) and require authentication.\n\nWrite methods (POST/PUT/PATCH/DELETE) are advertised by the index but require authentication and are intentionally not documented here.\n\nContact Support:\n Name: Lish\n Email: catering@lishfood.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -4,17 +4,24 @@ source: openapi/lish-wordpress-openapi.json
 status: candidate
 official: false
 published_server: null
-summary: |
-  Lish operates no MCP server, hosted or otherwise, and nothing in the MCP
+summary: 'Lish operates no MCP server, hosted or otherwise, and nothing in the MCP
+
   registry or on lishfood.com references one. What follows is a CANDIDATE tool
+
   surface derived from the operations in the derived OpenAPI — a design sketch
+
   for what an MCP server over the public Lish content API could expose, not a
+
   description of anything that exists.
 
+
   This artifact is deliberately NOT wired into apis.yml as an MCPServer pointer,
+
   because no MCP server is genuinely present and claiming one would misrepresent
+
   the provider.
 
+  '
 search_performed:
 - target: MCP registry
   result: no entry for Lish or lishfood.com
@@ -24,7 +31,6 @@ search_performed:
   result: no reference to MCP, agents or an AI tool surface
 - target: api.lishfood.com / developers.lishfood.com
   result: do not resolve
-
 candidate_server:
   name: lish-content
   description: Read-only access to Lish blog posts, marketing pages and media.
@@ -32,79 +38,109 @@ candidate_server:
   auth: none
   base_url: https://www.lishfood.com/wp-json/wp/v2
   read_only: true
-  rationale: >-
-    Every operation in the derived spec is a safe GET against an anonymous read
-    surface, so a candidate server would be read-only by construction. No write
-    tools should be modeled: writes require WordPress credentials and would give
-    an agent edit access to the company's live marketing site.
-
+  rationale: 'Every operation in the derived spec is a safe GET against an anonymous read surface, so
+    a candidate server would be read-only by construction. No write tools should be modeled: writes require
+    WordPress credentials and would give an agent edit access to the company''s live marketing site.'
 candidate_tools:
 - name: search_lish_content
   operationId: searchContent
   method: GET
   path: /search
-  description: >-
-    Search across Lish posts and pages by keyword. Best first call when no id is
-    known; returns {id, title, url, type, subtype} stubs.
-  inputs: [search, page, per_page, type, subtype]
+  description: Search across Lish posts and pages by keyword. Best first call when no id is known; returns
+    {id, title, url, type, subtype} stubs.
+  inputs:
+  - search
+  - page
+  - per_page
+  - type
+  - subtype
 - name: list_lish_posts
   operationId: listPosts
   method: GET
   path: /posts
   description: List Lish blog posts, newest first. Supports date windows and taxonomy filters.
-  inputs: [search, page, per_page, categories, tags, after, before, orderby, order, _fields]
+  inputs:
+  - search
+  - page
+  - per_page
+  - categories
+  - tags
+  - after
+  - before
+  - orderby
+  - order
+  - _fields
 - name: get_lish_post
   operationId: getPost
   method: GET
   path: /posts/{id}
   description: Retrieve one blog post by numeric id, including rendered content.
-  inputs: [id, _fields, _embed]
+  inputs:
+  - id
+  - _fields
+  - _embed
 - name: list_lish_pages
   operationId: listPages
   method: GET
   path: /pages
-  description: >-
-    List marketing pages. Filter by slug to fetch a known page (about, faq, terms,
-    privacy, our-chefs, lish-technology, the catering service pages).
-  inputs: [search, slug, page, per_page, parent, _fields]
+  description: List marketing pages. Filter by slug to fetch a known page (about, faq, terms, privacy,
+    our-chefs, lish-technology, the catering service pages).
+  inputs:
+  - search
+  - slug
+  - page
+  - per_page
+  - parent
+  - _fields
 - name: get_lish_page
   operationId: getPage
   method: GET
   path: /pages/{id}
   description: Retrieve one marketing page by numeric id, including rendered content.
-  inputs: [id, _fields, _embed]
+  inputs:
+  - id
+  - _fields
+  - _embed
 - name: list_lish_categories
   operationId: listCategories
   method: GET
   path: /categories
   description: List blog categories with post counts, for narrowing a post search.
-  inputs: [search, page, per_page, orderby]
+  inputs:
+  - search
+  - page
+  - per_page
+  - orderby
 - name: list_lish_tags
   operationId: listTags
   method: GET
   path: /tags
   description: List blog tags with post counts.
-  inputs: [search, page, per_page, orderby]
+  inputs:
+  - search
+  - page
+  - per_page
+  - orderby
 - name: get_lish_media
   operationId: getMediaItem
   method: GET
   path: /media/{id}
   description: Retrieve a media item and its source_url, for resolving featured images.
-  inputs: [id, _fields]
-
+  inputs:
+  - id
+  - _fields
 implementation_notes:
-- >-
-  Always request _fields to trim responses — full post objects embed rendered
-  HTML and will blow an agent's context window on a list call.
-- >-
-  Paginate by following the rel="next" Link header and stopping when it is
-  absent. Requesting a page past the end returns HTTP 400
-  rest_post_invalid_page_number, not an empty array.
-- >-
-  Returned `link` fields and Link headers use the wordpress.lishfood.com origin;
-  rewrite to www.lishfood.com before surfacing URLs to a user.
-- >-
-  Strip or sanitize the rendered HTML in content.rendered before passing it to a
-  model.
+- Always request _fields to trim responses — full post objects embed rendered HTML and will blow an agent's
+  context window on a list call.
+- Paginate by following the rel="next" Link header and stopping when it is absent. Requesting a page past
+  the end returns HTTP 400 rest_post_invalid_page_number, not an empty array.
+- Returned `link` fields and Link headers use the wordpress.lishfood.com origin; rewrite to www.lishfood.com
+  before surfacing URLs to a user.
+- Strip or sanitize the rendered HTML in content.rendered before passing it to a model.
 - see: ../conventions/lish-conventions.yml
 - see: ../errors/lish-problem-types.yml
+deployment:
+  mode: none
+  verified: derived
+  checked: '2026-08-12'
+  source: catalog MCP census
