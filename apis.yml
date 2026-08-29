@@ -17,6 +17,18 @@ description: >-
   product integrations — Lish operates no developer program and publishes no
   product API. The only public, self-describing HTTP API is the WordPress REST API
   behind its marketing site, profiled here.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
