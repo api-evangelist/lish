@@ -1,17 +1,7 @@
 {
   "provider": "lish",
   "sources": [
-    "lish-categories-api-openapi.yml",
-    "lish-comments-api-openapi.yml",
-    "lish-media-api-openapi.yml",
-    "lish-pages-api-openapi.yml",
-    "lish-posts-api-openapi.yml",
-    "lish-search-api-openapi.yml",
-    "lish-statuses-api-openapi.yml",
-    "lish-tags-api-openapi.yml",
-    "lish-taxonomies-api-openapi.yml",
-    "lish-types-api-openapi.yml",
-    "lish-users-api-openapi.yml"
+    "_original/lish-wordpress-openapi.json"
   ],
   "outputs": [
     "lish-categories-api-openapi.yml",
@@ -29,6 +19,22 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "lish-wordpress-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "lish-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-statuses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-taxonomies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-types-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lish-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

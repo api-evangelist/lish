@@ -2,7 +2,7 @@ overlay: 1.0.0
 info:
   title: Lish WordPress REST API — API Evangelist enhancements
   version: 1.0.0
-  description: >-
+  x-description: >-
     Enhancements applied by the API Evangelist enrichment pipeline on top of
     openapi/lish-wordpress-openapi.json. The base specification is itself a
     faithful derivation of the live route index at

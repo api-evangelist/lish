@@ -1,15 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Lish WordPress REST Categories Users API
+  title: Lish WordPress REST Users API
   version: wp/v2
   summary: Public read surface of the WordPress REST API behind lishfood.com.
-  description: 'Lish (lishfood.com) is a corporate catering and workplace food service company serving Seattle and the Bellevue/Eastside area. Lish does not publish a product API for its catering platform. This document describes the one genuinely public, self-describing HTTP API the company does expose: the WordPress REST API that backs its marketing site and blog, reachable at https://www.lishfood.com/wp-json/ (the WordPress install reports its home as https://wordpress.lishfood.com).
-
-
-    This specification was DERIVED by the API Evangelist enrichment pipeline from the live route index — every path, method, parameter name, type, default and enum is taken from `routes[].endpoints[].args` as served on 2026-07-19. It is scoped to the publicly readable `wp/v2` core content surface (posts, pages, categories, tags, comments, media, users, search, types, taxonomies, statuses). The live index also advertises 348 routes across 21 namespaces, most of which belong to plugins (Elementor, Yoast, Wordfence, Contact Form 7, JupiterX, Redirection, WP Smush, Salesforce, WP Engine) and require authentication.
-
-
-    Write methods (POST/PUT/PATCH/DELETE) are advertised by the index but require authentication and are intentionally not documented here.'
+  description: Lish (lishfood.com) is a corporate catering and workplace food service company serving Seattle and the Bellevue/Eastside area.
   contact:
     name: Lish
     email: catering@lishfood.com
@@ -233,28 +227,9 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  headers:
-    X-WP-Total:
-      description: Total number of items in the collection. Verified live.
-      schema:
-        type: integer
-    X-WP-TotalPages:
-      description: Total number of pages available. Verified live.
-      schema:
-        type: integer
-    Link:
-      description: RFC 8288 pagination links (rel="next" / rel="prev"). Verified live.
-      schema:
-        type: string
   responses:
     NotFound:
       description: Resource not found (WordPress error envelope). Verified live on /wp/v2/posts/999999999.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid parameter (WordPress error envelope).
       content:
         application/json:
           schema:
@@ -265,6 +240,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter (WordPress error envelope).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  headers:
+    X-WP-Total:
+      description: Total number of items in the collection. Verified live.
+      schema:
+        type: integer
+    Link:
+      description: RFC 8288 pagination links (rel="next" / rel="prev"). Verified live.
+      schema:
+        type: string
+    X-WP-TotalPages:
+      description: Total number of pages available. Verified live.
+      schema:
+        type: integer
   schemas:
     Error:
       type: object
