@@ -64,55 +64,117 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Lish is a corporate catering and workplace food service company serving Seattle
-and the Bellevue/Eastside area of Washington, including Redmond and Kirkland. It
-connects employers with a curated roster of local partner chefs and runs the whole
-workplace meal program — subscription catering, PopUp restaurants, on-demand
-catering, and occasion catering for breakfast, lunch, box lunches, happy hours,
-meetings and events.
+Lish is a corporate catering and workplace food service company serving Seattle and the Bellevue/Eastside area of Washington, including Redmond and Kirkland. It connects employers with a curated roster of local partner chefs and runs the whole workplace meal program — menu curation, ordering, delivery and setup — across four service lines: subscription catering, PopUp restaurants that employees buy from directly, on-demand one-off catering, and occasion catering for breakfast, lunch, box lunches, happy hours, meetings and events. The company reports more than 3,000,000 meals served, 100+ curated menus from dozens of partner chefs, an average meal rating of 4.6 stars, and 97.8% of orders delivered on time within a 20-minute window, with dietary accommodation (gluten-free, vegetarian, vegan, dairy-free) as a stated focus. Lish describes an admin dashboard, budget tracking, GPS delivery tracking, Google Calendar and Outlook menu visibility and Slack feedback notifications, but these are end-user product integrations — Lish operates no developer program and publishes no product API. The only public, self-describing HTTP API is the WordPress REST API behind its marketing site, profiled here.
 
-Backed by: 500 Global — https://www.lishfood.com
+**Areas:** Company · Catering · Food and Beverage · Food Delivery · Workplace · Corporate Services · Content
 
-## API status
+## Lish on APIs.io
 
-**Lish operates no developer program and publishes no product API.** There is no
-developer portal, no API documentation, no SDK, no CLI, no MCP server, no webhook
-or event surface, no status page and no changelog. Probed 2026-07-19:
-`api.lishfood.com`, `developers.lishfood.com` and `status.lishfood.com` do not
-resolve, and every `/.well-known/` path returns 404.
+Everything profiled for Lish is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/lish/](https://apis.io/providers/lish/)** — or go straight to one of the APIs or properties below.
 
-The one genuinely public, self-describing HTTP API is the **WordPress REST API**
-that backs the marketing site and blog, at `https://www.lishfood.com/wp-json/`.
-It exists as a byproduct of the CMS. Anonymous reads need no credentials. It is
-useful for reading Lish content and nothing else — there is no published
-versioning, deprecation, SLA or rate-limit policy, so it carries no stability
-contract.
+### APIs (1)
 
-There is no public API for menus, pricing, availability, ordering, delivery status
-or accounts. Those live behind a login in the customer application at
-`https://app.lishfood.com`.
+- [Lish Website (WordPress REST)](https://apis.io/apis/lish/lishfood-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Lish website at www.lishfood.com: the route index of the site's content management system, catalogued as one…
 
-## Artifacts
+### Published properties
 
-| Path | Type | Method |
-|---|---|---|
-| `apis.yml` | APIs.json profile | — |
-| `openapi/lish-wordpress-openapi.json` | OpenAPI 3.1, 18 operations | derived from the live route index |
-| `overlays/lish-wordpress-overlay.yaml` | OpenAPI Overlay 1.0.0 | generated |
-| `conventions/lish-conventions.yml` | Conventions | derived, verified live |
-| `errors/lish-problem-types.yml` | ErrorCatalog | derived, all codes verified live |
-| `lifecycle/lish-lifecycle.yml` | Lifecycle | derived |
-| `authentication/lish-authentication.yml` | Authentication | derived |
-| `conformance/lish-conformance.yml` | Conformance | derived |
-| `data-model/lish-data-model.yml` | DataModel | derived |
-| `security/lish-domain-security.yml` | DomainSecurity | probed |
-| `well-known/lish-well-known.yml` | probe record (all 404) | probed |
-| `llms/lish-llms.txt` | LLMsTxt | generated |
-| `mcp/lish-mcp.yml` | candidate MCP surface — nothing published by Lish | derived |
-| `skills/` | 2 Agent Skills + index | generated |
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Not applicable for this provider: packages/SDKs, gRPC, AsyncAPI/webhooks, OAuth
-scopes, sandbox, CLI, components, changelog, decline codes, vulnerability
-disclosure, trust center.
+#### MCP servers (1)
 
-Live content counts as of 2026-07-19: 28 blog posts, 60 pages, 4 categories.
+Model Context Protocol servers that expose the API to agents.
+
+- [lish-mcp.yml](https://apis.io/servers/lish/lish-mcp-yml/)
+
+#### Collections (11)
+
+Postman and Open Collection request collections.
+
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-categories-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-comments-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-media-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-pages-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-posts-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-search-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-statuses-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-tags-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-taxonomies-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-types-api/)
+- [Moved to /providers/lish/](https://apis.io/collections/lish/open-lish-users-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Lish Wordpress Overlay](https://apis.io/overlays/lish/lish-wordpress-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Lish Authentication](https://apis.io/security/lish/lish-authentication/)
+- [Lish Domain Security](https://apis.io/security/lish/lish-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.lishfood.com)
+- [Sign up](https://www.lishfood.com/pages/get-started)
+- [Support](https://www.lishfood.com/pages/contact-us)
+- [Blog](https://www.lishfood.com/blog)
+- [Terms of service](https://www.lishfood.com/pages/terms)
+- [Privacy policy](https://www.lishfood.com/pages/privacy)
+
+## API Evangelist rating
+
+**Kin Score 21.3** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 64.3 |
+| Contract quality | 0.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 34.2 |
+
+**Agent readiness 4.1** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/lish/](https://apis.io/providers/lish/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Lish: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/lish/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
